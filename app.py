@@ -127,7 +127,7 @@ PRESET_CONFIGS = {
         "search_size": 11,
         "base_h": 26.0,
         "weight_mode": "NLM",
-        "desc": "Keseimbangan optimal antara reduksi bintik noise dan preservasi detail tekstur."
+        "desc": "Diatas dari Preset Ringan, namun cukup powerfull mengatasi noise yang lebih banyak"
     },
     "🛡️ Halus Maksimal (Noise Berat)": {
         "k": 18,
@@ -135,7 +135,7 @@ PRESET_CONFIGS = {
         "search_size": 15,
         "base_h": 38.0,
         "weight_mode": "NLM",
-        "desc": "Pembersihan agresif untuk foto low-light atau noise tinggi."
+        "desc": "Paling berat dalam mengatasi noise ekstrim terutama di pencahayaan"
     },
     "🛠️ Kustom (Atur Sendiri)": {
         "k": 10,
@@ -154,7 +154,7 @@ PRESET_CONFIGS = {
 
 with st.sidebar:
     st.markdown('<div class="sidebar-header">✨ <b>Image Denoiser</b></div>', unsafe_allow_html=True)
-    st.caption("Pilih option image dan tentukan preset pembersihan yang cocok")
+    st.caption("Pilih option image dan tentukan preset cleaning paling pas")
 
     # 1. PILIH CITRA
     st.markdown("##### 📁 Image Source")
@@ -189,7 +189,7 @@ with st.sidebar:
             max_value=60,
             value=25,
             step=5,
-            help="Menambahkan noise simulasi pada citra sampel agar terlihat proses pembersihannya secara jelas."
+            help="Menyimulasikan noise pada image/sampel agar terlihat proses pembersihannya secara jelas."
         )
     else:
         uploaded_file = st.file_uploader(
@@ -205,7 +205,7 @@ with st.sidebar:
         add_sim_noise = st.checkbox(
             "Tambahkan Noise Buatan (Simulasi)",
             value=False,
-            help="Centang jika foto Anda sudah sangat bersih dan Anda ingin menambahkan noise untuk diuji."
+            help="Centang jika Anda ingin menambahkan noise untuk diuji."
         )
         if add_sim_noise:
             sample_noise_level = st.slider("Level Noise Tambahan:", 10, 60, 25, step=5)
@@ -218,7 +218,7 @@ with st.sidebar:
         "Pilih Profil Restorasi:",
         options=list(PRESET_CONFIGS.keys()),
         index=1,
-        help="Pilih preset yang paling sesuai dengan tingkat gangguan noise pada citra Anda."
+        help="Pilih preset yang paling sesuai dengan noise pada citra Anda."
     )
     
     preset_data = PRESET_CONFIGS[selected_preset]
@@ -232,7 +232,7 @@ with st.sidebar:
         value=100,
         step=5,
         format="%d%%",
-        help="100% adalah nilai standar preset. Naikkan jika citra masih berbintik, turunkan jika tepi tampak terlalu halus."
+        help="100% adalah nilai standar preset. Naikkan jika image masih berbintik, turunkan jika tepi tampak terlalu halus."
     )
 
     # Inisialisasi parameter kerja dari preset & slider kekuatan
@@ -359,7 +359,7 @@ if should_run:
     def update_progress(pct, current_strip, total_strips):
         pbar.progress(
             min(1.0, max(0.0, pct)),
-            text=f"Memproses baris {current_strip}/{total_strips} ({int(pct * 100)}%)..."
+            text=f"On processing {current_strip}/{total_strips} ({int(pct * 100)}%)..."
         )
 
     t_start = time.time()
