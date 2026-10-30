@@ -56,10 +56,10 @@ Buka browser pada alamat: `http://localhost:8501`
 KNN NLM Denoiser Streamlit/
 │
 ├── .streamlit/
-│   └── config.toml             # Konfigurasi tema Streamlit
+│   └── config.toml             # Konfigurasi tema 
 │
 ├── assets/
-│   └── sample_images/          # Citra sampel pengujian instan
+│   └── sample_images/          # Sample gambar awal
 │       ├── 1_geometric_shapes.png
 │       ├── 2_nature_landscape.png
 │       ├── 3_radial_textures.png
@@ -67,13 +67,13 @@ KNN NLM Denoiser Streamlit/
 │
 ├── core/
 │   ├── __init__.py
-│   ├── denoiser.py             # Algoritma inti KNN patch denoise & noise models
+│   ├── denoiser.py             # Main denoiser dengan KNN dan NLM
 │   ├── metrics.py              # Evaluasi metrik: MSE, PSNR, SSIM, MAD Estimator
-│   └── sample_generator.py     # Pembuat citra sampel benchmark
+│   └── sample_generator.py     # Pembuat sampel benchmark
 │
-├── app.py                      # Aplikasi Streamlit (UI ringkas & responsif)
+├── app.py                      # Streamlit utama (UI ringkas & responsif)
 ├── style.css                   # Custom styling modern & glassmorphism
 ├── requirements.txt            # Daftar pustaka python
-├── run_app.bat                 # Shortcut launcher Windows
+├── run_app.bat                 # Launcher serta mengeek dependensi buat Windows
 └── README.md                   # Dokumentasi proyek
 ```
