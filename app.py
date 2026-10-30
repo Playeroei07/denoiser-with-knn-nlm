@@ -32,7 +32,7 @@ from core.sample_generator import generate_sample_images
 # =====================================================================
 
 st.set_page_config(
-    page_title="KNN Image Denoiser",
+    page_title="Image Denoiser",
     page_icon="✨",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -153,14 +153,14 @@ PRESET_CONFIGS = {
 # =====================================================================
 
 with st.sidebar:
-    st.markdown('<div class="sidebar-header">✨ <b>KNN Image Denoiser</b></div>', unsafe_allow_html=True)
-    st.caption("Pilih citra dan tentukan profil pembersihan dalam beberapa klik.")
+    st.markdown('<div class="sidebar-header">✨ <b>Image Denoiser</b></div>', unsafe_allow_html=True)
+    st.caption("Pilih option image dan tentukan preset pembersihan yang cocok")
 
     # 1. PILIH CITRA
-    st.markdown("##### 📁 1. Sumber Citra")
+    st.markdown("##### 📁 Image Source")
     source_type = st.radio(
         "Pilih Sumber:",
-        options=["🖼️ Sampel Bawaan", "📤 Unggah Berkas"],
+        options=["🖼️ Sample", "📤 Upload Image"],
         index=0,
         horizontal=True,
         label_visibility="collapsed"
