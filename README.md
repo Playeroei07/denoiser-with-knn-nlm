@@ -31,7 +31,7 @@ Aplikasi web interaktif modern untuk restorasi citra digital berbasis **K-Neares
 
 ## 🚀 Cara Menjalankan Aplikasi
 
-### 1. Prasyarat
+### 1. Dependensi
 Pastikan Python 3.9+ sudah terpasang.
 
 ### 2. Instalasi Dependensi
