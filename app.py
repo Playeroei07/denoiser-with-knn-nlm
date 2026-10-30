@@ -168,7 +168,7 @@ with st.sidebar:
 
     clean_img_arr = None
     pil_preview = None
-    is_sample = (source_type == "🖼️ Sampel Bawaan")
+    is_sample = ("Sample" in source_type or "Sampel" in source_type)
     sample_noise_level = 25.0
 
     if is_sample:
