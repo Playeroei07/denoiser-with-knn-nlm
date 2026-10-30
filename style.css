@@ -1,0 +1,201 @@
+/* Google Fonts: Outfit & Plus Jakarta Sans */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #2563eb 100%);
+    --primary-gradient-hover: linear-gradient(135deg, #059669 0%, #0891b2 50%, #1d4ed8 100%);
+    --surface-glass: rgba(19, 35, 48, 0.7);
+    --surface-border: rgba(45, 212, 191, 0.22);
+    --surface-border-hover: rgba(6, 182, 212, 0.45);
+    --glow-color: rgba(6, 182, 212, 0.2);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-accent: #34d399;
+}
+
+html, body, [class*="css"] {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Background subtlety */
+.stApp {
+    background: radial-gradient(circle at 15% 10%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(37, 99, 235, 0.09) 0%, transparent 45%),
+                #0b151e;
+}
+
+/* Compact Header (Clean & Modern) */
+.compact-header {
+    padding: 1.2rem 1.6rem 1.2rem 1.6rem;
+    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(16, 185, 129, 0.08), rgba(6, 182, 212, 0.1), rgba(37, 99, 235, 0.06));
+    border: 1px solid var(--surface-border);
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+}
+
+.compact-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--primary-gradient);
+}
+
+.brand-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.compact-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.35rem 0;
+    background: linear-gradient(135deg, #34d399 0%, #22d3ee 50%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.compact-subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Sidebar Custom Header */
+.sidebar-header {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Image Header Label */
+.img-header {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.badge {
+    font-size: 0.74rem;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.badge.red {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.badge.green {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.badge.blue {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+    border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+/* Primary Action Button (Denoise) */
+div.stButton > button[kind="primary"],
+div.stButton > button:first-child {
+    background: var(--primary-gradient) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 0.65rem 1.4rem !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    letter-spacing: 0.02em !important;
+    box-shadow: 0 4px 14px rgba(6, 182, 212, 0.3) !important;
+    transition: all 0.25s ease !important;
+}
+
+div.stButton > button:hover {
+    background: var(--primary-gradient-hover) !important;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Download Secondary Button */
+div.stDownloadButton > button {
+    background: rgba(19, 35, 48, 0.8) !important;
+    color: #67e8f9 !important;
+    border: 1px solid rgba(6, 182, 212, 0.35) !important;
+    border-radius: 10px !important;
+    padding: 0.55rem 1.2rem !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    transition: all 0.2s ease !important;
+}
+
+div.stDownloadButton > button:hover {
+    background: rgba(6, 182, 212, 0.15) !important;
+    border-color: #22d3ee !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Sidebar Customization */
+section[data-testid="stSidebar"] {
+    background-color: #0b151e !important;
+    border-right: 1px solid var(--surface-border) !important;
+}
+
+section[data-testid="stSidebar"] hr {
+    margin: 1.1rem 0 !important;
+    border-color: rgba(45, 212, 191, 0.15) !important;
+}
+
+/* Custom Sliders & Inputs */
+div[data-baseweb="slider"] div[role="slider"] {
+    background-color: #06b6d4 !important;
+    border-color: #34d399 !important;
+    box-shadow: 0 0 8px rgba(6, 182, 212, 0.6) !important;
+}
+
+/* Expander Styling */
+div[data-testid="stExpander"] {
+    border: 1px solid var(--surface-border) !important;
+    border-radius: 12px !important;
+    background-color: rgba(19, 35, 48, 0.45) !important;
+    margin: 1rem 0 !important;
+}
+
+div[data-testid="stExpander"]:hover {
+    border-color: var(--surface-border-hover) !important;
+}
