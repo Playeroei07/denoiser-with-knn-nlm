@@ -264,9 +264,6 @@ with st.sidebar:
 
     st.markdown("---")
 
-    # Ukuran pratinjau standar HD (720px) otomatis
-    target_dim = 720
-
     # Tombol Eksekusi
     st.markdown("<br>", unsafe_allow_html=True)
     run_btn = st.button("✨ Jalankan Denoise Sekarang", type="primary", use_container_width=True)
@@ -313,20 +310,8 @@ if "metrics_data" not in st.session_state:
 should_run = (clean_img_arr is not None) and (run_btn or not st.session_state.has_processed)
 
 if should_run:
+    # Memproses citra pada 100% resolusi asli penuh
     img_work = clean_img_arr.copy()
-
-    # Penskalaan resolusi jika diperlukan
-    if target_dim is not None and max(img_work.shape[0], img_work.shape[1]) > target_dim:
-        pil_tmp = Image.fromarray(np.clip(img_work, 0, 255).astype(np.uint8))
-        w, h = pil_tmp.size
-        if w > h:
-            new_w = target_dim
-            new_h = int(h * (target_dim / w))
-        else:
-            new_h = target_dim
-            new_w = int(w * (target_dim / h))
-        pil_tmp = pil_tmp.resize((new_w, new_h), Image.Resampling.LANCZOS)
-        img_work = np.array(pil_tmp, dtype=np.float32)
 
     # Persiapan input & noise
     # Jika menggunakan sampel atau mencentang tambah noise buatan:
@@ -438,8 +423,9 @@ if st.session_state.has_processed and st.session_state.denoised_arr is not None:
             st.markdown('<div class="img-header"><span class="badge green">Sesudah</span> Hasil Pembersihan (KNN NLM)</div>', unsafe_allow_html=True)
             st.image(np.clip(denoised_arr / 255.0, 0, 1), use_container_width=True)
 
-    # Tombol Unduh Langsung
+    # Tombol Unduh Langsung (100% Resolusi Asli)
     st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(f"<div style='font-size: 0.88rem; color: #67e8f9; margin-bottom: 0.5rem;'>✨ Berkas Siap Diunduh — <b>({w_img} × {h_img} px)</b></div>", unsafe_allow_html=True)
     denoised_bytes, _ = array_to_pil_bytes(denoised_arr)
     collage_bytes = create_comparison_collage(gt_arr, noisy_arr, denoised_arr)
 
