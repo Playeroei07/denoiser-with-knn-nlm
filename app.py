@@ -264,19 +264,8 @@ with st.sidebar:
 
     st.markdown("---")
 
-    # 3. OPTIMASI UKURAN GAMBAR (AGAR RESPONSIF)
-    max_res_option = st.selectbox(
-        "Maksimum Ukuran Pemrosesan:",
-        options=["Cepat (Maks 280 px)", "Standar (Maks 360 px)", "Resolusi Penuh (Asli)"],
-        index=1,
-        help="Menjaga pemrosesan tetap instan (<3 detik). Cocok untuk preview cepat."
-    )
-    dim_map = {
-        "Cepat (Maks 280 px)": 280,
-        "Standar (Maks 360 px)": 360,
-        "Resolusi Penuh (Asli)": None
-    }
-    target_dim = dim_map[max_res_option]
+    # Ukuran pratinjau standar HD (720px) otomatis
+    target_dim = 720
 
     # Tombol Eksekusi
     st.markdown("<br>", unsafe_allow_html=True)
