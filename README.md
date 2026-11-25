@@ -18,11 +18,13 @@ Aplikasi web interaktif modern untuk restorasi citra digital berbasis **K-Neares
 - **Inspeksi Visual Langsung (Before vs After)**:
   - Perbandingan berdampingan citra bernoise dan hasil restorasi dalam kartu visual yang bersih.
   - Opsi perbandingan 3 citra jika menggunakan mode simulasi *Ground Truth*.
-- **Analisis Mendalam Opsional (Collapsible Expander)**:
-  - Peta residual noise heatmap $|I_{\text{noisy}} - I_{\text{denoised}}|$.
-  - Histogram spektrum distribusi warna RGB.
-  - Tabel evaluasi metrik kuantitatif (PSNR, SSIM, MSE).
-  - Ekspor laporan metrik format JSON.
+- **Evaluasi Kualitas Gambar Lengkap**:
+  - **Mode Citra Riil (Tanpa Simulasi Noise / No-Reference)**:
+    - 🌟 **NIQE (Natural Image Quality Evaluator)**: Mengukur kealamian citra berbasis *Natural Scene Statistics* tanpa butuh *ground truth* (skor lebih rendah = lebih bersih).
+    - 🛡️ **MAD Noise Level Estimator ($\sigma$)**: Mengestimasi penurunan deviasi noise residual frekuensi tinggi.
+  - **Mode Simulasi (*Ground Truth*)**:
+    - 📈 **PSNR & PSNR Gain**: Mengukur rasio kekuatan sinyal citra terhadap noise dalam dB.
+    - 🔍 **SSIM (Structural Similarity Index)**: Menilai pelestarian struktur, tekstur, dan garis tepi.
 - **Unduh Cepat**:
   - Unduh citra bersih resolusi penuh (PNG).
   - Unduh kolase perbandingan visual langsung.
