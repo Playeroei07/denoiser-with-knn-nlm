@@ -4,10 +4,14 @@ Metrik Evaluasi Kualitas Citra Digital:
 - PSNR (Peak Signal-to-Noise Ratio)
 - SSIM (Structural Similarity Index)
 - MAD Noise Level Estimator (tanpa ground truth)
+- NIQE (Natural Image Quality Evaluator - No-Reference)
 """
 
 import numpy as np
 from scipy.signal import convolve2d
+
+# Import No-Reference NIQE Evaluator
+from core.niqe import calculate_niqe
 
 
 def mse(a, b):
