@@ -23,7 +23,9 @@ from core.denoiser import (
 from core.metrics import (
     mse,
     psnr,
-    compute_ssim
+    compute_ssim,
+    estimate_noise_sigma_mad,
+    calculate_niqe
 )
 from core.sample_generator import generate_sample_images
 
@@ -351,18 +353,37 @@ if should_run:
     t_elapsed = time.time() - t_start
     progress_slot.empty()
 
-    # Perhitungan metrik ringkas
+    # Perhitungan metrik evaluasi
     m_data = {}
     if ground_truth is not None:
         p_noisy = psnr(ground_truth, noisy_input)
         p_denoised = psnr(ground_truth, denoised_result)
+        s_denoised = compute_ssim(ground_truth, denoised_result)
         m_data = {
             "has_gt": True,
             "psnr_gain": p_denoised - p_noisy,
-            "psnr_denoised": p_denoised
+            "psnr_denoised": p_denoised,
+            "ssim_denoised": s_denoised
         }
     else:
-        m_data = {"has_gt": False}
+        # Evaluasi Tanpa Referensi Asli (No-Reference / Blind IQA)
+        sigma_in = estimate_noise_sigma_mad(noisy_input)
+        sigma_out = estimate_noise_sigma_mad(denoised_result)
+        noise_reduct_pct = ((sigma_in - sigma_out) / max(1e-6, sigma_in)) * 100.0 if sigma_in > 0 else 0.0
+        
+        niqe_in = calculate_niqe(noisy_input)
+        niqe_out = calculate_niqe(denoised_result)
+        niqe_improv = niqe_in - niqe_out  # Penurunan skor = peningkatan kualitas alami
+
+        m_data = {
+            "has_gt": False,
+            "sigma_in": sigma_in,
+            "sigma_out": sigma_out,
+            "noise_reduct_pct": noise_reduct_pct,
+            "niqe_in": niqe_in,
+            "niqe_out": niqe_out,
+            "niqe_improv": niqe_improv
+        }
 
     # Simpan ke session state
     st.session_state.clean_arr = ground_truth
@@ -387,9 +408,13 @@ if st.session_state.has_processed and st.session_state.denoised_arr is not None:
 
     # Notifikasi status sukses yang simpel dan informatif
     if m_data.get("has_gt", False):
-        st.success(f"✨ Pembersihan selesai dalam **{elapsed_time:.2f} detik**! Kualitas citra meningkat **+{m_data['psnr_gain']:.2f} dB**.")
+        st.success(f"✨ Pembersihan selesai dalam **{elapsed_time:.2f} detik**! Kualitas citra meningkat **+{m_data['psnr_gain']:.2f} dB** (PSNR: **{m_data['psnr_denoised']:.2f} dB**, SSIM: **{m_data['ssim_denoised']:.4f}**).")
     else:
-        st.success(f"✨ Pembersihan selesai dalam **{elapsed_time:.2f} detik**! Resolusi: **{w_img} × {h_img} px**.")
+        niqe_msg = ""
+        if "niqe_out" in m_data:
+            diff_str = f"turun **{m_data['niqe_improv']:+.2f}** (kualitas alami membaik)" if m_data['niqe_improv'] >= 0 else f"**{m_data['niqe_improv']:+.2f}**"
+            niqe_msg = f" • Skor NIQE: **{m_data['niqe_in']:.2f}** → **{m_data['niqe_out']:.2f}** ({diff_str})"
+        st.success(f"✨ Pembersihan selesai dalam **{elapsed_time:.2f} detik**! Noise tereduksi **{m_data.get('noise_reduct_pct', 0.0):.1f}%**{niqe_msg}.")
 
     # Pilihan tata letak kolom jika memiliki citra asli
     if gt_arr is not None:
@@ -422,6 +447,60 @@ if st.session_state.has_processed and st.session_state.denoised_arr is not None:
         with c2:
             st.markdown('<div class="img-header"><span class="badge green">Sesudah</span> Hasil Pembersihan (KNN NLM)</div>', unsafe_allow_html=True)
             st.image(np.clip(denoised_arr / 255.0, 0, 1), use_container_width=True)
+
+    # Panel Evaluasi Kuantitatif
+    if not m_data.get("has_gt", False) and "niqe_out" in m_data:
+        with st.expander("📊 Evaluasi Kualitas Citra Riil (NIQE & Noise MAD)", expanded=True):
+            m_col1, m_col2, m_col3 = st.columns(3)
+            with m_col1:
+                st.metric(
+                    label="🌟 Skor NIQE (Kualitas Alami)",
+                    value=f"{m_data['niqe_out']:.2f}",
+                    delta=f"-{m_data['niqe_improv']:.2f} (Lebih Bersih)" if m_data['niqe_improv'] >= 0 else f"+{abs(m_data['niqe_improv']):.2f}",
+                    delta_color="inverse",
+                    help="Natural Image Quality Evaluator: Menilai kealamian citra tanpa referensi (NR-IQA). Skor LEBIH RENDAH menandakan citra lebih alami dan bebas noise."
+                )
+            with m_col2:
+                st.metric(
+                    label="🛡️ Estimasi Noise Deviasi (MAD σ)",
+                    value=f"{m_data['sigma_out']:.1f}",
+                    delta=f"-{m_data['noise_reduct_pct']:.1f}% Tereduksi",
+                    delta_color="inverse",
+                    help="Estimasi deviasi noise frekuensi tinggi menggunakan Median Absolute Deviation (MAD). Nilai semakin kecil berarti gambar semakin bersih."
+                )
+            with m_col3:
+                st.metric(
+                    label="⚡ Kecepatan Restorasi",
+                    value=f"{elapsed_time:.2f} detik",
+                    delta=f"{w_img} × {h_img} px",
+                    delta_color="off"
+                )
+            st.caption("ℹ️ **Catatan Metrik**: Karena citra ini tidak menggunakan simulasi noise (citra asli tanpa noise tidak diketahui), sistem menggunakan **NIQE (Natural Scene Statistics)** dan **MAD Noise Estimator** sebagai tolok ukur kualitas objektif tanpa referensi (*No-Reference IQA*).")
+    elif m_data.get("has_gt", False):
+        with st.expander("📊 Evaluasi Kualitas Citra Simulasi (PSNR & SSIM)", expanded=True):
+            m_col1, m_col2, m_col3 = st.columns(3)
+            with m_col1:
+                st.metric(
+                    label="📈 PSNR (Peak Signal-to-Noise)",
+                    value=f"{m_data['psnr_denoised']:.2f} dB",
+                    delta=f"+{m_data['psnr_gain']:.2f} dB Meningkat",
+                    help="Kualitas rekonstruksi citra. Nilai semakin tinggi semakin baik (umumnya > 30 dB dianggap sangat baik)."
+                )
+            with m_col2:
+                st.metric(
+                    label="🔍 SSIM (Struktur & Tekstur)",
+                    value=f"{m_data['ssim_denoised']:.4f}",
+                    delta="Rentang 0.0 - 1.0",
+                    delta_color="off",
+                    help="Structural Similarity Index: Menilai kemiripan struktur, luminansi, dan kontras. Mendekati 1.0 berarti tekstur dan garis tepi terjaga utuh."
+                )
+            with m_col3:
+                st.metric(
+                    label="⚡ Kecepatan Restorasi",
+                    value=f"{elapsed_time:.2f} detik",
+                    delta=f"{w_img} × {h_img} px",
+                    delta_color="off"
+                )
 
     # Tombol Unduh Langsung (100% Resolusi Asli)
     st.markdown("<br>", unsafe_allow_html=True)
